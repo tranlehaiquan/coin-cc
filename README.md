@@ -64,7 +64,7 @@ It's simple to run `coinmon` on your local computer.
 The following is step-by-step instruction.
 
 ```
-$ git clone https://github.com/xxhomey19/nba-go.git
+$ git clone https://github.com/bichenkk/coinmon.git
 $ cd coinmon
 $ yarn
 $ npm install -g
