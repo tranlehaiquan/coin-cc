@@ -8,9 +8,9 @@
 </p>  
 
 
-> Cryptocurrency price ticker CLI.
+> 💰 Cryptocurrency price ticker CLI.
 
-Check coin prices, changes on your console.
+Check cryptocurrencies' prices, changes on your console.
 Best CLI tool for those who are both **Crypto investors** and **Engineers**.
 
 All data comes from [coinmarketcap.com](https://coinmarketcap.com/) APIs.
@@ -32,7 +32,22 @@ $ coinmon
 
 ### Options
 
-You can use the `-t` (or `--top`) command with the index to check the top n cryptocurrencies ranked by their market cap.
+You can use the `-c` (or `--convert`) with the fiat currency symbol to find in terms of another currency.
+The default currency is USD.
+
+```
+$ coinmon -c usd
+$ coinmon -c eur
+```
+
+You can use the `-f` (or `--find`) with keyword to search cryptocurrencies.
+
+```
+$ coinmon -f btc
+$ coinmon -f bitcoin
+```
+
+You can use the `-t` (or `--top`) with the index to find the top n cryptocurrencies ranked by their market cap.
 
 ```
 $ coinmon --top 50

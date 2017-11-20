@@ -7,14 +7,19 @@ const Table = require('cli-table2');
 const colors = require('colors');
 
 program
-  .version('0.0.4')
-  // .option('-f, --full', 'Show the full data')
-  .option('-t, --top [index]', 'Show the top coins ranked from 1 - [index] according to the market cap', '10')
+  .version('0.0.5')
+  .option('-c, --convert [currency]', 'Convert to your fiat currency', 'usd')
+  .option('-f, --find [keyword]', 'Find specific coin data with coin symbol or name', null)
+  .option('-t, --top [index]', 'Show the top coins ranked from 1 - [index] according to the market cap', null)
   .parse(process.argv);
 
-const sourceUrl = 'https://api.coinmarketcap.com/v1/ticker/'
-const top = !isNaN(program.top) && +program.top > 0 ? +program.top : 10
-const isFull = program.full
+const find = program.find
+const top = !isNaN(program.top) && +program.top > 0 ? +program.top : (find ? 1500 : 10)
+const convert = program.convert.toUpperCase()
+const availableCurrencies = ['USD', 'AUD', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'IDR', 'ILS', 'INR', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PKR', 'PLN', 'RUB', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'ZAR']
+if (availableCurrencies.indexOf(convert) === -1) {
+  return console.log('We cannot convert to your fiat currency.'.red)
+}
 const table = new Table({
   chars: {
     'top': '-',
@@ -33,8 +38,8 @@ const table = new Table({
     'right-mid': '-',
     'middle': '│'
   },
-  head: ['Rank', 'Coin', 'Price (USD)', 'Change (24H)', 'Change (1H)', 'Market Cap (USD)'].map(title => title.yellow),
-  colWidths: [6, 10, 15, 15, 15 , 20]
+  head: ['Rank', 'Coin', `Price (${convert})`, 'Change (24H)', 'Change (1H)', `Market Cap (${convert})`].map(title => title.yellow),
+  colWidths: [6, 14, 15, 15, 15, 20]
 });
 
 cfonts.say('coinmon', {
@@ -48,26 +53,34 @@ cfonts.say('coinmon', {
   maxLength: '0'
 });
 const spinner = ora('Loading data').start();
+const sourceUrl = `https://api.coinmarketcap.com/v1/ticker/?limit=${top}&convert=${convert}`
 axios.get(sourceUrl)
 .then(function (response) {
   spinner.stop();
-  console.log(`Data from coinmarketcap.com at ${new Date().toLocaleTimeString()}`)
+  console.log(`Data sourced from coinmarketcap.com at ${new Date().toLocaleTimeString()}`)
+  console.log(response.data.length)
   response.data
-    .filter(record => +record.rank <= top)
+    .filter(record => {
+      if (find) {
+        const keyword = `${find}`
+        return record.symbol.toLowerCase().indexOf(keyword) !== -1 || record.name.toLowerCase().indexOf(keyword) !== -1
+      }
+      return true
+    })
     .map(record => {
       const percentChange24h = record.percent_change_24h
       const textChange24h = `${percentChange24h}%`
-      const change24h = percentChange24h > 0 ? textChange24h.green : textChange24h.red
+      const change24h = percentChange24h? (percentChange24h > 0 ? textChange24h.green : textChange24h.red) : 'NA'
       const percentChange1h = record.percent_change_1h
       const textChange1h = `${percentChange1h}%`
-      const change1h = percentChange1h > 0 ? textChange1h.green : textChange1h.red
+      const change1h = percentChange1h ? (percentChange1h > 0 ? textChange1h.green : textChange1h.red) : 'NA'
       return [
         record.rank,
         `💰  ${record.symbol}`, 
-        record.price_usd, 
+        record[`price_${convert}`.toLowerCase()], 
         change24h,
         change1h,
-        record.market_cap_usd
+        record[`market_cap_${convert}`.toLowerCase()]
       ]
     })
     .forEach(record => table.push(record))
