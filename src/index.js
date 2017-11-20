@@ -51,7 +51,7 @@ const spinner = ora('Loading data').start();
 axios.get(sourceUrl)
 .then(function (response) {
   spinner.stop();
-  console.log(`Data from coinmarketcap at ${new Date()}`)
+  console.log(`Data from coinmarketcap.com at ${new Date().toLocaleTimeString()}`)
   response.data
     .filter(record => +record.rank <= top)
     .map(record => {
