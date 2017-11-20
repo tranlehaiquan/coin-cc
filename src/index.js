@@ -5,8 +5,18 @@ const ora = require('ora');
 const cfonts = require('cfonts');
 const Table = require('cli-table2');
 const colors = require('colors');
+
+program
+  .version('0.0.4')
+  // .option('-f, --full', 'Show the full data')
+  .option('-t, --top [index]', 'Show the top coins ranked from 1 - [index] according to the market cap', '10')
+  .parse(process.argv);
+
+const sourceUrl = 'https://api.coinmarketcap.com/v1/ticker/'
+const top = !isNaN(program.top) && +program.top > 0 ? +program.top : 10
+const isFull = program.full
 const table = new Table({
-  chars: { 
+  chars: {
     'top': '-',
     'top-mid': '-',
     'top-left': '-',
@@ -23,8 +33,8 @@ const table = new Table({
     'right-mid': '-',
     'middle': '│'
   },
-  head: ['Rank'.yellow, 'Coin'.yellow, 'Price (USD)'.yellow, 'Change (24H)'.yellow, 'Change (1H)'.yellow, 'Market Cap (USD)'.yellow]
-  , colWidths: [6, 10, 15, 15, 15 , 20]
+  head: ['Rank', 'Coin', 'Price (USD)', 'Change (24H)', 'Change (1H)', 'Market Cap (USD)'].map(title => title.yellow),
+  colWidths: [6, 10, 15, 15, 15 , 20]
 });
 
 cfonts.say('coinmon', {
@@ -38,12 +48,12 @@ cfonts.say('coinmon', {
   maxLength: '0'
 });
 const spinner = ora('Loading data').start();
-axios.get('https://api.coinmarketcap.com/v1/ticker/')
+axios.get(sourceUrl)
 .then(function (response) {
   spinner.stop();
   console.log(`Data from coinmarketcap at ${new Date()}`)
   response.data
-    .filter(record => +record.rank <= 10)
+    .filter(record => +record.rank <= top)
     .map(record => {
       const percentChange24h = record.percent_change_24h
       const textChange24h = `${percentChange24h}%`
