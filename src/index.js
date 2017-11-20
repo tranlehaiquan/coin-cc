@@ -58,7 +58,6 @@ axios.get(sourceUrl)
 .then(function (response) {
   spinner.stop();
   console.log(`Data sourced from coinmarketcap.com at ${new Date().toLocaleTimeString()}`)
-  console.log(response.data.length)
   response.data
     .filter(record => {
       if (find) {
