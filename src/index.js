@@ -7,7 +7,7 @@ const Table = require('cli-table2');
 const colors = require('colors');
 
 program
-  .version('0.0.5')
+  .version('0.0.6')
   .option('-c, --convert [currency]', 'Convert to your fiat currency', 'usd')
   .option('-f, --find [keyword]', 'Find specific coin data with coin symbol or name', null)
   .option('-t, --top [index]', 'Show the top coins ranked from 1 - [index] according to the market cap', null)
@@ -86,5 +86,6 @@ axios.get(sourceUrl)
   console.log(table.toString());
 })
 .catch(function (error) {
-  console.log(error);
+  spinner.stop();
+  console.error('Coinmon is not working now. Please try again later.'.red);
 });
