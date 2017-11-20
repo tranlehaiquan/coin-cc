@@ -30,7 +30,7 @@ To check the top 10 cryptocurrencies ranked by their market cap, simply enter
 $ coinmon
 ```
 
-### Options
+## Options
 
 You can use the `-c` (or `--convert`) with the fiat currency symbol to find in terms of another currency.
 The default currency is USD.
@@ -52,6 +52,10 @@ You can use the `-t` (or `--top`) with the index to find the top n cryptocurrenc
 ```
 $ coinmon --top 50
 ```
+
+## Screenshot
+
+<img src="https://raw.githubusercontent.com/bichenkk/coinmon/master/screenshot.png">
 
 ## Development
 
