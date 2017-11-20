@@ -5,7 +5,6 @@ const ora = require('ora');
 const cfonts = require('cfonts');
 const Table = require('cli-table2');
 const colors = require('colors');
-
 const table = new Table({
   chars: { 
     'top': '-',
@@ -24,8 +23,8 @@ const table = new Table({
     'right-mid': '-',
     'middle': '│'
   },
-  head: ['Coin'.yellow, 'Price (USD)'.yellow, 'Change (24H)'.yellow, 'Market Cap (USD)'.yellow]
-  , colWidths: [10, 20, 20, 20]
+  head: ['Rank'.yellow, 'Coin'.yellow, 'Price (USD)'.yellow, 'Change (24H)'.yellow, 'Change (1H)'.yellow, 'Market Cap (USD)'.yellow]
+  , colWidths: [6, 10, 15, 15, 15 , 20]
 });
 
 cfonts.say('coinmon', {
@@ -42,24 +41,28 @@ const spinner = ora('Loading data').start();
 axios.get('https://api.coinmarketcap.com/v1/ticker/')
 .then(function (response) {
   spinner.stop();
+  console.log(`Data from coinmarketcap at ${new Date()}`)
   response.data
-    .filter(record => +record.rank <= 5)
-    .map(record => [
-      `💰  ${record.symbol}`, 
-      record.price_usd, 
-      record.percent_change_24h > 0 ? record.percent_change_24h.green : record.percent_change_24h.red,
-      record.market_cap_usd
-    ])
+    .filter(record => +record.rank <= 10)
+    .map(record => {
+      const percentChange24h = record.percent_change_24h
+      const textChange24h = `${percentChange24h}%`
+      const change24h = percentChange24h > 0 ? textChange24h.green : textChange24h.red
+      const percentChange1h = record.percent_change_1h
+      const textChange1h = `${percentChange1h}%`
+      const change1h = percentChange1h > 0 ? textChange1h.green : textChange1h.red
+      return [
+        record.rank,
+        `💰  ${record.symbol}`, 
+        record.price_usd, 
+        change24h,
+        change1h,
+        record.market_cap_usd
+      ]
+    })
     .forEach(record => table.push(record))
   console.log(table.toString());
 })
 .catch(function (error) {
   console.log(error);
 });
-
-// program
-//   .arguments('<coin>')
-//   .action(function(coin) {
-//     console.log('coin: %s', coin);
-//   })
-//   .parse(process.argv);
