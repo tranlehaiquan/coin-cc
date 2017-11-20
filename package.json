@@ -1,0 +1,29 @@
+{
+  "name": "coinmon",
+  "version": "0.0.1",
+  "description": "A crytocurrency price monitoring tool.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bichenkk/coinmon.git"
+  },
+  "bin": {
+    "coinmon": "./src/index.js"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "keywords": [
+    "bitcoin",
+    "crypto"
+  ],
+  "author": "KK Chen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bichenkk/coinmon/issues"
+  },
+  "homepage": "https://github.com/bichenkk/coinmon#readme"
+}
