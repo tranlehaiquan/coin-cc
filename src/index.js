@@ -93,6 +93,5 @@ axios.get(sourceUrl)
 })
 .catch(function (error) {
   spinner.stop();
-    console.log(error);
   console.error('Coinmon is not working now. Please try again later.'.red);
 });
