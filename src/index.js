@@ -5,12 +5,14 @@ const ora = require('ora');
 const cfonts = require('cfonts');
 const Table = require('cli-table2');
 const colors = require('colors');
+const humanize = require('humanize-plus');
 
 program
   .version('0.0.6')
   .option('-c, --convert [currency]', 'Convert to your fiat currency', 'usd')
   .option('-f, --find [keyword]', 'Find specific coin data with coin symbol or name', null)
   .option('-t, --top [index]', 'Show the top coins ranked from 1 - [index] according to the market cap', null)
+  .option('-H, --humanize', 'Show market cap as a humanized number', false)
   .parse(process.argv);
 
 const find = program.find
@@ -73,13 +75,17 @@ axios.get(sourceUrl)
       const percentChange1h = record.percent_change_1h
       const textChange1h = `${percentChange1h}%`
       const change1h = percentChange1h ? (percentChange1h > 0 ? textChange1h.green : textChange1h.red) : 'NA'
+      const marketCap = record[`market_cap_${convert}`.toLowerCase()];
+
+      const displayedMarketCap = program.humanize ? humanize.compactInteger(marketCap, 3) : marketCap;
+
       return [
         record.rank,
-        `💰  ${record.symbol}`, 
-        record[`price_${convert}`.toLowerCase()], 
+        `💰  ${record.symbol}`,
+        record[`price_${convert}`.toLowerCase()],
         change24h,
         change1h,
-        record[`market_cap_${convert}`.toLowerCase()]
+        displayedMarketCap
       ]
     })
     .forEach(record => table.push(record))
@@ -87,5 +93,6 @@ axios.get(sourceUrl)
 })
 .catch(function (error) {
   spinner.stop();
+    console.log(error);
   console.error('Coinmon is not working now. Please try again later.'.red);
 });
