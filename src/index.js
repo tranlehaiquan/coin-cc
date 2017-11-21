@@ -12,7 +12,7 @@ program
   .option('-c, --convert [currency]', 'Convert to your fiat currency', 'usd')
   .option('-f, --find [keyword]', 'Find specific coin data with coin symbol or name', null)
   .option('-t, --top [index]', 'Show the top coins ranked from 1 - [index] according to the market cap', null)
-  .option('-H, --humanize [enable]', 'Show market cap as a humanized number, default enabled', true)
+  .option('-H, --humanize [enable]', 'Show market cap as a humanized number, default true', true)
   .parse(process.argv);
 
 const convert = program.convert.toUpperCase()
@@ -22,7 +22,7 @@ if (availableCurrencies.indexOf(convert) === -1) {
 }
 const find = program.find
 const top = !isNaN(program.top) && +program.top > 0 ? +program.top : (find ? 1500 : 10)
-const humanizeIsEnabled = program.humanize
+const humanizeIsEnabled = program.humanize !== 'false'
 const table = new Table({
   chars: {
     'top': '-',
