@@ -7,13 +7,14 @@
 <a target="_blank" href="http://makeapullrequest.com" title="PRs Welcome"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg"></a>
 </p>  
 
-
 > 💰 Cryptocurrency price ticker CLI.
 
 Check cryptocurrencies' prices, changes on your console.
 Best CLI tool for those who are both **Crypto investors** and **Engineers**.
 
 All data comes from [coinmarketcap.com](https://coinmarketcap.com/) APIs.
+
+Auto price update is on the way...
 
 ## Install
 

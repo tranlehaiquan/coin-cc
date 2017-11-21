@@ -8,7 +8,7 @@ const colors = require('colors');
 const humanize = require('humanize-plus');
 
 program
-  .version('0.0.6')
+  .version('0.0.7')
   .option('-c, --convert [currency]', 'Convert to your fiat currency', 'usd')
   .option('-f, --find [keyword]', 'Find specific coin data with coin symbol or name', null)
   .option('-t, --top [index]', 'Show the top coins ranked from 1 - [index] according to the market cap', null)
