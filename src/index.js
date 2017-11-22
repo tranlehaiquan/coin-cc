@@ -23,7 +23,7 @@ if (availableCurrencies.indexOf(convert) === -1) {
   return console.log('We cannot convert to your fiat currency.'.red)
 }
 const find = program.find
-const top = !isNaN(program.top) && +program.top > 0 ? +program.top : (find ? 1500 : 10)
+const top = !isNaN(program.top) && +program.top > 0 ? +program.top : (find.length > 0 ? 1500 : 10)
 const humanizeIsEnabled = program.humanize !== 'false'
 const table = new Table({
   chars: {
@@ -64,7 +64,7 @@ axios.get(sourceUrl)
   spinner.stop();
   response.data
     .filter(record => {
-      if (find) {
+      if (find.length > 0) {
         return find.some(keyword => record.symbol.toLowerCase() === keyword.toLowerCase())
       }
       return true
