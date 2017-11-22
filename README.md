@@ -51,8 +51,20 @@ $ coinmon -f eth // search coins included keyword eth
 You can use the `-t` (or `--top`) with the index to find the top n cryptocurrencies ranked by their market cap.
 
 ```
-$ coinmon --top 50 // find top 50
-$ coinmon --top 1000 // find top 1000
+$ coinmon -t 50 // find top 50
+$ coinmon -t 1000 // find top 1000
+```
+
+You can use the `-H` (or `--humanize`) with true / false to display market cap in different format. By default, the option is true and the market cap will be shown in humanized format
+
+```
+$ coinmon -H false // show market cap in full number like 136343835627
+```
+
+You can use the `-h` (or `--help`) to find all valid options of coinmon
+
+```
+$ coinmon -h
 ```
 
 ## Screenshot
