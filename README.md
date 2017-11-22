@@ -41,11 +41,11 @@ $ coinmon -c eur // convert prices to Eurodollars
 $ coinmon -c jpy // convert prices to the Japanese yen
 ```
 
-You can use the `-f` (or `--find`) with keyword to search cryptocurrencies.
+You can use the `-f` (or `--find`) with coin symbol to search cryptocurrencies. You can add symbols seperated by comma. Credit to @maticrivo
 
 ```
 $ coinmon -f btc // search coins included keyword btc
-$ coinmon -f eth // search coins included keyword eth
+$ coinmon -f btc,eth // search coins included keyword btc or eth
 ```
 
 You can use the `-t` (or `--top`) with the index to find the top n cryptocurrencies ranked by their market cap.
@@ -55,7 +55,7 @@ $ coinmon -t 50 // find top 50
 $ coinmon -t 1000 // find top 1000
 ```
 
-You can use the `-H` (or `--humanize`) with true / false to display market cap in different format. By default, the option is true and the market cap will be shown in humanized format
+You can use the `-H` (or `--humanize`) with true / false to display market cap in different format. By default, the option is true and the market cap will be shown in humanized format. Credit to @pgilad
 
 ```
 $ coinmon -H false // show market cap in full number like 136343835627

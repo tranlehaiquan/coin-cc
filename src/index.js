@@ -10,9 +10,9 @@ const humanize = require('humanize-plus');
 const list = val => val.split(',')
 
 program
-  .version('0.0.7')
+  .version('0.0.8')
   .option('-c, --convert [currency]', 'Convert to your fiat currency', 'usd')
-  .option('-f, --find [keywords]', 'Find specific coin data with coin symbol or name (can be a comma seperated list)', list, [])
+  .option('-f, --find [symbol]', 'Find specific coin data with coin symbol (can be a comma seperated list)', list, [])
   .option('-t, --top [index]', 'Show the top coins ranked from 1 - [index] according to the market cap', null)
   .option('-H, --humanize [enable]', 'Show market cap as a humanized number, default true', true)
   .parse(process.argv);
@@ -62,11 +62,10 @@ const sourceUrl = `https://api.coinmarketcap.com/v1/ticker/?limit=${top}&convert
 axios.get(sourceUrl)
 .then(function (response) {
   spinner.stop();
-  console.log(`Data source from coinmarketcap.com at ${new Date().toLocaleTimeString()}`)
   response.data
     .filter(record => {
       if (find) {
-        return find.some(keyword => record.symbol.toLowerCase().indexOf(keyword) !== -1 || record.name.toLowerCase().indexOf(keyword) !== -1)
+        return find.some(keyword => record.symbol.toLowerCase() === keyword.toLowerCase())
       }
       return true
     })
@@ -89,7 +88,12 @@ axios.get(sourceUrl)
       ]
     })
     .forEach(record => table.push(record))
-  console.log(table.toString());
+  if (table.length === 0) {
+    console.log('We are not able to find coins matching your keywords'.red);
+  } else {
+    console.log(`Data source from coinmarketcap.com at ${new Date().toLocaleTimeString()}`)
+    console.log(table.toString());
+  }
 })
 .catch(function (error) {
   spinner.stop();
