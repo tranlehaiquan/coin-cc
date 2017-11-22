@@ -7,10 +7,12 @@ const Table = require('cli-table2');
 const colors = require('colors');
 const humanize = require('humanize-plus');
 
+const list = val => val.split(',')
+
 program
   .version('0.0.7')
   .option('-c, --convert [currency]', 'Convert to your fiat currency', 'usd')
-  .option('-f, --find [keyword]', 'Find specific coin data with coin symbol or name', null)
+  .option('-f, --find [keywords]', 'Find specific coin data with coin symbol or name (can be a comma seperated list)', list, [])
   .option('-t, --top [index]', 'Show the top coins ranked from 1 - [index] according to the market cap', null)
   .option('-H, --humanize [enable]', 'Show market cap as a humanized number, default true', true)
   .parse(process.argv);
@@ -64,8 +66,7 @@ axios.get(sourceUrl)
   response.data
     .filter(record => {
       if (find) {
-        const keyword = `${find}`
-        return record.symbol.toLowerCase().indexOf(keyword) !== -1 || record.name.toLowerCase().indexOf(keyword) !== -1
+        return find.some(keyword => record.symbol.toLowerCase().indexOf(keyword) !== -1 || record.name.toLowerCase().indexOf(keyword) !== -1)
       }
       return true
     })
