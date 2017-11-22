@@ -10,7 +10,7 @@ const humanize = require('humanize-plus');
 const list = val => val.split(',')
 
 program
-  .version('0.0.8')
+  .version('0.0.9')
   .option('-c, --convert [currency]', 'Convert to your fiat currency', 'usd')
   .option('-f, --find [symbol]', 'Find specific coin data with coin symbol (can be a comma seperated list)', list, [])
   .option('-t, --top [index]', 'Show the top coins ranked from 1 - [index] according to the market cap', null)
