@@ -37,7 +37,7 @@ You can use the `-c` (or `--convert`) with the fiat currency symbol to find in t
 The default currency is USD and it supports AUD, BRL, CAD, CHF, CLP, CNY, CZK, DKK, EUR, GBP, HKD, HUF, IDR, ILS, INR, JPY, KRW, MXN, MYR, NOK, NZD, PHP, PKR, PLN, RUB, SEK, SGD, THB, TRY, TWD, ZAR.
 
 ```
-$ coinmon -c eur // convert prices to Eurodollars
+$ coinmon -c eur // convert prices to Euro
 $ coinmon -c jpy // convert prices to the Japanese yen
 ```
 
