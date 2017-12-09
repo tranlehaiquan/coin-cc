@@ -14,7 +14,12 @@ Best CLI tool for those who are both **Crypto investors** and **Engineers**.
 
 All data comes from [coinmarketcap.com](https://coinmarketcap.com/) APIs.
 
-Auto price update is on the way...
+## Upcoming 1.0.0
+We are working hard to add more useful features on coinmon!
+* redesign
+* auto-refresh
+* currency detail
+* price chart
 
 ## Install
 
@@ -38,7 +43,7 @@ The default currency is USD and it supports AUD, BRL, CAD, CHF, CLP, CNY, CZK, D
 
 ```
 $ coinmon -c eur // convert prices to Euro
-$ coinmon -c jpy // convert prices to the Japanese yen
+$ coinmon -c jpy // convert prices to Yen
 ```
 
 You can use the `-f` (or `--find`) with coin symbol to search cryptocurrencies. You can add symbols seperated by comma. Credit to @maticrivo
