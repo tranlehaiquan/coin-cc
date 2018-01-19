@@ -66,6 +66,21 @@ You can use the `-H` (or `--humanize`) with true / false to display market cap i
 $ coinmon -H false // show market cap in full number like 136343835627
 ```
 
+You can use the `-P` (or `--portfolio`) to retrieve price info and value estimation for your personal crypto portfolio specified in $HOME/.coinmon/portfolio.json in the following format and
+
+```
+{
+  "xrp": 999,
+  "ada": 999,
+  "pivx": 999,
+  ...
+}
+```
+
+```
+$ coinmon -P
+```
+
 You can use the `-h` (or `--help`) to find all valid options of coinmon
 
 ```
