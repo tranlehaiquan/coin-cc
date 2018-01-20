@@ -1,5 +1,5 @@
 <p align=center>
-<img src="https://raw.githubusercontent.com/bichenkk/coinmon/master/logo.svg">
+<img src="https://raw.githubusercontent.com/bichenkk/coinmon/master/logo.png">
 </p>
 <p align=center>
 <a target="_blank" href="http://nodejs.org/download/" title="Node version"><img src="https://img.shields.io/badge/node.js-%3E=_6.0-green.svg"></a>
