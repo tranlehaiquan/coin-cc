@@ -38,12 +38,18 @@ $ coinmon
 
 ## Options
 
-You can use the `-c` (or `--convert`) with the fiat currency symbol to find in terms of another currency.
+You can use the `-c` (or `--convert`) with the currency symbol to find in terms of another currency.
 The default currency is USD and it supports AUD, BRL, CAD, CHF, CLP, CNY, CZK, DKK, EUR, GBP, HKD, HUF, IDR, ILS, INR, JPY, KRW, MXN, MYR, NOK, NZD, PHP, PKR, PLN, RUB, SEK, SGD, THB, TRY, TWD, ZAR.
 
 ```
 $ coinmon -c eur // convert prices to Euro
 $ coinmon -c jpy // convert prices to Yen
+```
+
+You can also use BTC as the price pair.
+
+```
+$ coinmon -c btc // convert prices to bitcoin
 ```
 
 You can use the `-f` (or `--find`) with coin symbol to search cryptocurrencies. You can add symbols seperated by comma. Credit to @maticrivo
