@@ -55,8 +55,7 @@ const table = new Table({
     'right-mid': '-',
     'middle': '│'
   },
-  head: ['Rank', 'Coin', `Price (${convert})`, 'Change 24H', 'Change 1H', `Market Cap (${marketcapConvert})`].map(title => title.yellow),
-  colWidths: [6, 10, 15, 12, 12, 20]
+  head: ['Rank', 'Coin', `Price ${convert}`, 'Change 1H', 'Change 24H', 'Change 7D', `Market Cap ${marketcapConvert}`].map(title => title.yellow)
 })
 
 // Read portfolio config and add an extra column if needed
@@ -84,20 +83,28 @@ axios.get(sourceUrl)
         return true
       })
       .map(record => {
-        const percentChange24h = record.percent_change_24h
-        const textChange24h = `${percentChange24h}%`
-        const change24h = percentChange24h ? (percentChange24h > 0 ? textChange24h.green : textChange24h.red) : 'NA'
+
         const percentChange1h = record.percent_change_1h
         const textChange1h = `${percentChange1h}%`
         const change1h = percentChange1h ? (percentChange1h > 0 ? textChange1h.green : textChange1h.red) : 'NA'
+
+        const percentChange24h = record.percent_change_24h
+        const textChange24h = `${percentChange24h}%`
+        const change24h = percentChange24h ? (percentChange24h > 0 ? textChange24h.green : textChange24h.red) : 'NA'
+
+        const percentChange7d = record.percent_change_7d
+        const textChange7d = `${percentChange7d}%`
+        const change7d = percentChange7d ? (percentChange7d > 0 ? textChange7d.green : textChange7d.red) : 'NA'
+
         const marketCap = record[`market_cap_${marketcapConvert}`.toLowerCase()]
         const displayedMarketCap = marketCap && humanizeIsEnabled ? humanize.compactInteger(marketCap, 3) : marketCap
         const standardValues =  [
           record.rank,
           record.symbol,
           record[`price_${convert}`.toLowerCase()],
-          change24h,
           change1h,
+          change24h,
+          change7d,
           displayedMarketCap,
         ]
         if (portfolioEnabled) {
