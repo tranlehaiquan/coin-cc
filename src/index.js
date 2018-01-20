@@ -17,7 +17,7 @@ program
   .option('-t, --top [index]', 'Show the top coins ranked from 1 - [index] according to the market cap', null)
   .option('-H, --humanize [enable]', 'Show market cap as a humanized number, default true', true)
   .option('-P, --portfolio', 'Retrieve coins specified in $HOME/.coinmon/portfolio.json file', true)
-  .option('-C, --columns [index]', 'Display columns (can be a comma seperated list)', list, [])
+  .option('-C, --column [index]', 'Display columns (can be a comma seperated list)', list, [])
   .parse(process.argv)
 
 const convert = program.convert.toUpperCase()
@@ -40,7 +40,7 @@ const top = !isNaN(program.top) && +program.top > 0 ? +program.top : ((find.leng
 const humanizeIsEnabled = program.humanize !== 'false'
 // handle columns
 const defaultHeader = ['Rank', 'Coin', `Price ${convert}`, 'Change 1H', 'Change 24H', 'Change 7D', `Market Cap ${marketcapConvert}`].map(title => title.yellow)
-const columns = program.columns
+const columns = program.column
   .map(index => +index)
   .filter((index) => {
   return !isNaN(index) 

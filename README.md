@@ -96,6 +96,22 @@ And you can use vim or editors to input your portfolio
 $ coinmon -P
 ```
 
+You can use the `-C` (or `--column`) to display specific columns. You can add index seperated by comma.
+
+```
+// Index starts from 2
+2 - Price
+3 - Change 1H
+4 - Change 24H
+5 - Change 7D
+6 - Market Cap
+```
+
+```
+$ coinmon -C 2 // Display only Rank, Coin and Price
+$ coinmon -C 2,4 // Display only Rank, Coin, Price and Change 24H
+```
+
 You can use the `-h` (or `--help`) to find all valid options of coinmon
 
 ```
