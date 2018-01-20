@@ -11,12 +11,13 @@ const list = val => val.split(',')
 const portfolioPath = `${process.env['HOME']}/.coinmon/portfolio.json`
 
 program
-  .version('0.0.12')
+  .version('0.0.13')
   .option('-c, --convert [currency]', 'Convert to your currency', 'usd')
   .option('-f, --find [symbol]', 'Find specific coin data with coin symbol (can be a comma seperated list)', list, [])
   .option('-t, --top [index]', 'Show the top coins ranked from 1 - [index] according to the market cap', null)
   .option('-H, --humanize [enable]', 'Show market cap as a humanized number, default true', true)
   .option('-P, --portfolio', 'Retrieve coins specified in $HOME/.coinmon/portfolio.json file', true)
+  .option('-C, --columns [index]', 'Display columns (can be a comma seperated list)', list, [])
   .parse(process.argv)
 
 const convert = program.convert.toUpperCase()
@@ -37,6 +38,18 @@ if (program.portfolio) {
 }
 const top = !isNaN(program.top) && +program.top > 0 ? +program.top : ((find.length > 0 || portfolioEnabled) ? 1500 : 10)
 const humanizeIsEnabled = program.humanize !== 'false'
+// handle columns
+const defaultHeader = ['Rank', 'Coin', `Price ${convert}`, 'Change 1H', 'Change 24H', 'Change 7D', `Market Cap ${marketcapConvert}`].map(title => title.yellow)
+const columns = program.columns
+  .map(index => +index)
+  .filter((index) => {
+  return !isNaN(index) 
+    && index > 1
+    && index < defaultHeader.length
+})
+const sortedColumns = columns.concat(0).concat(1).sort()
+const customizedHeader = sortedColumns.map(index => defaultHeader[index])
+const header = columns.length === 0 ? defaultHeader : customizedHeader
 const table = new Table({
   chars: {
     'top': '-',
@@ -55,7 +68,7 @@ const table = new Table({
     'right-mid': '-',
     'middle': '│'
   },
-  head: ['Rank', 'Coin', `Price ${convert}`, 'Change 1H', 'Change 24H', 'Change 7D', `Market Cap ${marketcapConvert}`].map(title => title.yellow)
+  head: header
 })
 
 // Read portfolio config and add an extra column if needed
@@ -64,9 +77,7 @@ let portfolioSum = 0;
 if (portfolioEnabled) {
   portfolioCoins = JSON.parse(fs.readFileSync(portfolioPath).toString());
   table.options.head.push('Estimated Value'.yellow)
-  table.options.colWidths.push('15')
 }
-
 const spinner = ora('Loading data').start()
 const sourceUrl = `https://api.coinmarketcap.com/v1/ticker/?limit=${top}&convert=${convert}`
 axios.get(sourceUrl)
@@ -98,7 +109,7 @@ axios.get(sourceUrl)
 
         const marketCap = record[`market_cap_${marketcapConvert}`.toLowerCase()]
         const displayedMarketCap = marketCap && humanizeIsEnabled ? humanize.compactInteger(marketCap, 3) : marketCap
-        const standardValues =  [
+        const defaultValues = [
           record.rank,
           record.symbol,
           record[`price_${convert}`.toLowerCase()],
@@ -107,12 +118,14 @@ axios.get(sourceUrl)
           change7d,
           displayedMarketCap,
         ]
+        const customizedValues = sortedColumns.map(index => defaultValues[index])
+        const values = columns.length === 0 ? defaultValues : customizedValues
         if (portfolioEnabled) {
           const portfolioGross = (portfolioCoins[record.symbol.toLowerCase()] * parseFloat(record[`price_${convert}`.toLowerCase()])).toFixed(2)
           portfolioSum = portfolioSum + parseFloat(portfolioGross);
-          return [...standardValues, portfolioGross]
+          return [...values, portfolioGross]
         }
-        return standardValues
+        return values
       })
       .forEach(record => table.push(record))
     if (table.length === 0) {
