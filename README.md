@@ -60,13 +60,22 @@ $ coinmon -t 50 // find top 50
 $ coinmon -t 1000 // find top 1000
 ```
 
-You can use the `-H` (or `--humanize`) with true / false to display market cap in different format. By default, the option is true and the market cap will be shown in humanized format. Credit to @pgilad
+You can use the `-H` (or `--humanize`) with true / false to display market cap in different format. By default, the option is true and the market cap will be shown in humanized format. Credit to@pgilad
 
 ```
 $ coinmon -H false // show market cap in full number like 136343835627
 ```
 
 You can use the `-P` (or `--portfolio`) to retrieve price info and value estimation for your personal crypto portfolio specified in $HOME/.coinmon/portfolio.json in the following format:
+
+```
+$ cd
+$ mkdir .coinmon
+$ cd .coinmon
+$ touch portfolio.json
+```
+
+And you can use vim or editors to input your portfolio
 
 ```
 {
@@ -138,6 +147,14 @@ You can pass parameters just like `coinmon` binary
 ```
 $ docker run --rm -ti coinmon --help
 ```
+
+## Contributors
+
+Thanks to
+@maticrivo 
+@pgila 
+@vladei
+@jaymoulin
 
 ## License
 
