@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+const fs = require('fs')
 const program = require('commander')
 const axios = require('axios')
 const ora = require('ora')
@@ -11,6 +12,7 @@ const os = require('os')
 const platform = os.platform() // linux, darwin, win32, sunos
 const supportEmoji = platform !== 'darwin'
 const list = val => val.split(',')
+const portfolioPath = `${process.env['HOME']}/.coinmon/portfolio.json`
 
 program
   .version('0.0.9')
@@ -18,6 +20,7 @@ program
   .option('-f, --find [symbol]', 'Find specific coin data with coin symbol (can be a comma seperated list)', list, [])
   .option('-t, --top [index]', 'Show the top coins ranked from 1 - [index] according to the market cap', null)
   .option('-H, --humanize [enable]', 'Show market cap as a humanized number, default true', true)
+  .option('-P, --portfolio', 'Retrieve coins specified in $HOME/.coinmon/portfolio.json file', true)
   .parse(process.argv)
 
 const convert = program.convert.toUpperCase()
@@ -26,7 +29,16 @@ if (availableCurrencies.indexOf(convert) === -1) {
   return console.log('We cannot convert to your fiat currency.'.red)
 }
 const find = program.find
-const top = !isNaN(program.top) && +program.top > 0 ? +program.top : (find.length > 0 ? 1500 : 10)
+let portfolioEnabled;
+if (program.portfolio) {
+  if (fs.existsSync(portfolioPath)) {
+    portfolioEnabled = true;
+  } else {
+    console.log(`Please include a configuration file at ${portfolioPath}`.red)
+    process.exit();
+  }
+}
+const top = !isNaN(program.top) && +program.top > 0 ? +program.top : ((find.length > 0 || portfolioEnabled) ? 1500 : 10)
 const humanizeIsEnabled = program.humanize !== 'false'
 const table = new Table({
   chars: {
@@ -39,8 +51,8 @@ const table = new Table({
     'bottom-left': '-',
     'bottom-right': '-',
     'left': '║',
-    'left-mid': '-' ,
-    'mid': '-' ,
+    'left-mid': '-',
+    'mid': '-',
     'mid-mid': '-',
     'right': '║',
     'right-mid': '-',
@@ -50,55 +62,74 @@ const table = new Table({
   colWidths: [6, 14, 15, 15, 15, 20]
 })
 
+// Read portfolio config and add an extra column if needed
+let portofolioCoins = [];
+let portfolioSum = 0;
+if (portfolioEnabled) {
+  portfolioCoins = JSON.parse(fs.readFileSync(portfolioPath).toString());
+  table.options.head.push('Estimated Value'.yellow)
+  table.options.colWidths.push('15')
+}
+
 cfonts.say('coinmon', {
   font: 'simple3d',
   align: 'left',
   colors: ['yellow'],
-  background: 'Black',
   letterSpacing: 2,
   lineHeight: 1,
   space: true,
   maxLength: '0'
 })
+
 const spinner = ora('Loading data').start()
 const sourceUrl = `https://api.coinmarketcap.com/v1/ticker/?limit=${top}&convert=${convert}`
 axios.get(sourceUrl)
-.then(function (response) {
-  spinner.stop()
-  response.data
-    .filter(record => {
-      if (find.length > 0) {
-        return find.some(keyword => record.symbol.toLowerCase() === keyword.toLowerCase())
-      }
-      return true
-    })
-    .map(record => {
-      const percentChange24h = record.percent_change_24h
-      const textChange24h = `${percentChange24h}%`
-      const change24h = percentChange24h? (percentChange24h > 0 ? textChange24h.green : textChange24h.red) : 'NA'
-      const percentChange1h = record.percent_change_1h
-      const textChange1h = `${percentChange1h}%`
-      const change1h = percentChange1h ? (percentChange1h > 0 ? textChange1h.green : textChange1h.red) : 'NA'
-      const marketCap = record[`market_cap_${convert}`.toLowerCase()]
-      const displayedMarketCap = humanizeIsEnabled ? humanize.compactInteger(marketCap, 3) : marketCap
-      return [
-        record.rank,
-        `${supportEmoji ? '💰  ' : ''}${record.symbol}`,
-        record[`price_${convert}`.toLowerCase()],
-        change24h,
-        change1h,
-        displayedMarketCap
-      ]
-    })
-    .forEach(record => table.push(record))
-  if (table.length === 0) {
-    console.log('We are not able to find coins matching your keywords'.red)
-  } else {
-    console.log(`Data source from coinmarketcap.com at ${new Date().toLocaleTimeString()}`)
-    console.log(table.toString())
-  }
-})
-.catch(function (error) {
-  spinner.stop()
-  console.error('Coinmon is not working now. Please try again later.'.red)
-})
+  .then(function (response) {
+    spinner.stop()
+    response.data
+      .filter(record => {
+          if (portfolioEnabled) {
+            return Object.keys(portfolioCoins).some(keyword => record.symbol.toLowerCase() === keyword.toLowerCase())
+          }
+          if (find.length > 0) {
+            return find.some(keyword => record.symbol.toLowerCase() === keyword.toLowerCase())
+          }
+        return true
+      })
+      .map(record => {
+        const percentChange24h = record.percent_change_24h
+        const textChange24h = `${percentChange24h}%`
+        const change24h = percentChange24h ? (percentChange24h > 0 ? textChange24h.green : textChange24h.red) : 'NA'
+        const percentChange1h = record.percent_change_1h
+        const textChange1h = `${percentChange1h}%`
+        const change1h = percentChange1h ? (percentChange1h > 0 ? textChange1h.green : textChange1h.red) : 'NA'
+        const marketCap = record[`market_cap_${convert}`.toLowerCase()]
+        const displayedMarketCap = humanizeIsEnabled ? humanize.compactInteger(marketCap, 3) : marketCap
+        const standardValues =  [
+          record.rank,
+          `${supportEmoji ? '💰  ' : ''}${record.symbol}`,
+          record[`price_${convert}`.toLowerCase()],
+          change24h,
+          change1h,
+          displayedMarketCap,
+        ]
+        if (portfolioEnabled) {
+          const portfolioGross = (portfolioCoins[record.symbol.toLowerCase()] * parseFloat(record[`price_${convert}`.toLowerCase()])).toFixed(2)
+          portfolioSum = portfolioSum + parseFloat(portfolioGross);
+          return [...standardValues, portfolioGross]
+        }
+        return standardValues
+      })
+      .forEach(record => table.push(record))
+    if (table.length === 0) {
+      console.log('We are not able to find coins matching your keywords'.red)
+    } else {
+      console.log(`Data source from coinmarketcap.com at ${new Date().toLocaleTimeString()}`)
+      console.log(table.toString())
+      portfolioEnabled && console.log('Estimated portfolio: '.bold + `${portfolioSum.toFixed(2)}`.green + ` ${convert}\n`)
+    }
+  })
+  .catch(function (error) {
+    spinner.stop()
+    console.error('Coinmon is not working now. Please try again later.'.red)
+  })
