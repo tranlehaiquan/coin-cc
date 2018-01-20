@@ -12,7 +12,7 @@ const portfolioPath = `${process.env['HOME']}/.coinmon/portfolio.json`
 
 program
   .version('0.0.11')
-  .option('-c, --convert [currency]', 'Convert to your fiat currency', 'usd')
+  .option('-c, --convert [currency]', 'Convert to your currency', 'usd')
   .option('-f, --find [symbol]', 'Find specific coin data with coin symbol (can be a comma seperated list)', list, [])
   .option('-t, --top [index]', 'Show the top coins ranked from 1 - [index] according to the market cap', null)
   .option('-H, --humanize [enable]', 'Show market cap as a humanized number, default true', true)
@@ -20,9 +20,9 @@ program
   .parse(process.argv)
 
 const convert = program.convert.toUpperCase()
-const availableCurrencies = ['USD', 'AUD', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'IDR', 'ILS', 'INR', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PKR', 'PLN', 'RUB', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'ZAR']
+const availableCurrencies = ['USD', 'AUD', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'IDR', 'ILS', 'INR', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PKR', 'PLN', 'RUB', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'ZAR', 'BTC']
 if (availableCurrencies.indexOf(convert) === -1) {
-  return console.log('We cannot convert to your fiat currency.'.red)
+  return console.log('We cannot convert to your currency.'.red)
 }
 const find = program.find
 let portfolioEnabled;
