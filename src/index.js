@@ -24,6 +24,7 @@ const availableCurrencies = ['USD', 'AUD', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'C
 if (availableCurrencies.indexOf(convert) === -1) {
   return console.log('We cannot convert to your currency.'.red)
 }
+const marketcapConvert = convert === 'BTC' ? 'USD' : convert
 const find = program.find
 let portfolioEnabled;
 if (program.portfolio) {
@@ -54,7 +55,7 @@ const table = new Table({
     'right-mid': '-',
     'middle': '│'
   },
-  head: ['Rank', 'Coin', `Price (${convert})`, 'Change 24H', 'Change 1H', `Market Cap (${convert})`].map(title => title.yellow),
+  head: ['Rank', 'Coin', `Price (${convert})`, 'Change 24H', 'Change 1H', `Market Cap (${marketcapConvert})`].map(title => title.yellow),
   colWidths: [6, 10, 15, 12, 12, 20]
 })
 
@@ -89,7 +90,7 @@ axios.get(sourceUrl)
         const percentChange1h = record.percent_change_1h
         const textChange1h = `${percentChange1h}%`
         const change1h = percentChange1h ? (percentChange1h > 0 ? textChange1h.green : textChange1h.red) : 'NA'
-        const marketCap = record[`market_cap_${convert}`.toLowerCase()]
+        const marketCap = record[`market_cap_${marketcapConvert}`.toLowerCase()]
         const displayedMarketCap = marketCap && humanizeIsEnabled ? humanize.compactInteger(marketCap, 3) : marketCap
         const standardValues =  [
           record.rank,
