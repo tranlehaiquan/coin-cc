@@ -6,15 +6,12 @@ const ora = require('ora')
 const Table = require('cli-table2')
 const colors = require('colors')
 const humanize = require('humanize-plus')
-const os = require('os')
 
-const platform = os.platform() // linux, darwin, win32, sunos
-const supportEmoji = platform !== 'darwin'
 const list = val => val.split(',')
 const portfolioPath = `${process.env['HOME']}/.coinmon/portfolio.json`
 
 program
-  .version('0.0.10')
+  .version('0.0.11')
   .option('-c, --convert [currency]', 'Convert to your fiat currency', 'usd')
   .option('-f, --find [symbol]', 'Find specific coin data with coin symbol (can be a comma seperated list)', list, [])
   .option('-t, --top [index]', 'Show the top coins ranked from 1 - [index] according to the market cap', null)
@@ -57,8 +54,8 @@ const table = new Table({
     'right-mid': '-',
     'middle': '│'
   },
-  head: ['Rank', 'Coin', `Price (${convert})`, 'Change (24H)', 'Change (1H)', `Market Cap (${convert})`].map(title => title.yellow),
-  colWidths: [6, 14, 15, 15, 15, 20]
+  head: ['Rank', 'Coin', `Price (${convert})`, 'Change 24H', 'Change 1H', `Market Cap (${convert})`].map(title => title.yellow),
+  colWidths: [6, 10, 15, 12, 12, 20]
 })
 
 // Read portfolio config and add an extra column if needed
@@ -93,10 +90,10 @@ axios.get(sourceUrl)
         const textChange1h = `${percentChange1h}%`
         const change1h = percentChange1h ? (percentChange1h > 0 ? textChange1h.green : textChange1h.red) : 'NA'
         const marketCap = record[`market_cap_${convert}`.toLowerCase()]
-        const displayedMarketCap = humanizeIsEnabled ? humanize.compactInteger(marketCap, 3) : marketCap
+        const displayedMarketCap = marketCap && humanizeIsEnabled ? humanize.compactInteger(marketCap, 3) : marketCap
         const standardValues =  [
           record.rank,
-          `${supportEmoji ? '💰  ' : ''}${record.symbol}`,
+          record.symbol,
           record[`price_${convert}`.toLowerCase()],
           change24h,
           change1h,
