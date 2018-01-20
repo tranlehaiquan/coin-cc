@@ -3,7 +3,6 @@ const fs = require('fs')
 const program = require('commander')
 const axios = require('axios')
 const ora = require('ora')
-const cfonts = require('cfonts')
 const Table = require('cli-table2')
 const colors = require('colors')
 const humanize = require('humanize-plus')
@@ -70,16 +69,6 @@ if (portfolioEnabled) {
   table.options.head.push('Estimated Value'.yellow)
   table.options.colWidths.push('15')
 }
-
-cfonts.say('coinmon', {
-  font: 'simple3d',
-  align: 'left',
-  colors: ['yellow'],
-  letterSpacing: 2,
-  lineHeight: 1,
-  space: true,
-  maxLength: '0'
-})
 
 const spinner = ora('Loading data').start()
 const sourceUrl = `https://api.coinmarketcap.com/v1/ticker/?limit=${top}&convert=${convert}`
