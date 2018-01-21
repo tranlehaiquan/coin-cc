@@ -38,6 +38,8 @@ $ coinmon
 
 ## Options
 
+### Convert to specific currency base
+
 You can use the `-c` (or `--convert`) with the currency symbol to find in terms of another currency.
 The default currency is USD and it supports AUD, BRL, CAD, CHF, CLP, CNY, CZK, DKK, EUR, GBP, HKD, HUF, IDR, ILS, INR, JPY, KRW, MXN, MYR, NOK, NZD, PHP, PKR, PLN, RUB, SEK, SGD, THB, TRY, TWD, ZAR.
 
@@ -52,12 +54,16 @@ You can also use BTC as the price pair.
 $ coinmon -c btc // convert prices to bitcoin
 ```
 
+### Find specific coin(s)
+
 You can use the `-f` (or `--find`) with coin symbol to search cryptocurrencies. You can add symbols seperated by comma. Credit to @maticrivo
 
 ```
 $ coinmon -f btc // search coins included keyword btc
 $ coinmon -f btc,eth // search coins included keyword btc or eth
 ```
+
+### Find top coin(s)
 
 You can use the `-t` (or `--top`) with the index to find the top n cryptocurrencies ranked by their market cap.
 
@@ -66,11 +72,7 @@ $ coinmon -t 50 // find top 50
 $ coinmon -t 1000 // find top 1000
 ```
 
-You can use the `-H` (or `--humanize`) with true / false to display market cap in different format. By default, the option is true and the market cap will be shown in humanized format. Credit to@pgilad
-
-```
-$ coinmon -H false // show market cap in full number like 136343835627
-```
+### Add your portfolio
 
 You can use the `-P` (or `--portfolio`) to retrieve price info and value estimation for your personal crypto portfolio specified in $HOME/.coinmon/portfolio.json in the following format:
 
@@ -96,6 +98,8 @@ And you can use vim or editors to input your portfolio
 $ coinmon -P
 ```
 
+### Show specific columns
+
 You can use the `-C` (or `--column`) to display specific columns. You can add index seperated by comma.
 
 ```
@@ -111,6 +115,16 @@ You can use the `-C` (or `--column`) to display specific columns. You can add in
 $ coinmon -C 2 // Display only Rank, Coin and Price
 $ coinmon -C 2,4 // Display only Rank, Coin, Price and Change 24H
 ```
+
+### Change market cap display format
+
+You can use the `-H` (or `--humanize`) with true / false to display market cap in different format. By default, the option is true and the market cap will be shown in humanized format. Credit to@pgilad
+
+```
+$ coinmon -H false // show market cap in full number like 136343835627
+```
+
+### Show option menu
 
 You can use the `-h` (or `--help`) to find all valid options of coinmon
 
