@@ -21,7 +21,7 @@ program
   .option('-f, --find [symbol]', 'Find specific coin data with coin symbol (can be a comma seperated list)', list, [])
   .option('-t, --top [index]', 'Show the top coins ranked from 1 - [index] according to the market cap', validation.validateNumber, 10)
   .option('-p, --portfolio', 'Retrieve coins specified in $HOME/.coinmon/portfolio.json file', validation.validatePorfolioConfigPath)
-  .option('-h, --header [index]', 'Display specific columns (can be a comma seperated list)', list, [])
+  .option('-s, --specific [index]', 'Display specific columns (can be a comma seperated list)', list, [])
   .parse(process.argv)
 
 console.log('\n')
@@ -39,13 +39,13 @@ const portfolio = program.portfolio
 // handle --top [index]
 const top = (find.length > 0 || portfolio) ? 1500 : program.top
 
-// handle --header [index]
+// handle --specific [index]
 const defaultHeader = ['Rank', 'Coin', `Price ${convert}`, 'Change 1H', 'Change 24H', 'Change 7D', `Market Cap ${marketcapConvert}`].map(title => title.yellow)
 if (portfolio) {
   defaultHeader.push('Estimated Value'.yellow)
 }
 const defaultColumns = defaultHeader.map((item, index) => index)
-const column = program.header
+const column = program.specific
 const columns = column.length > 0 
 ? column.map(index => +index)
   .filter((index) => {
@@ -93,7 +93,7 @@ if (portfolio) {
 // console.log('--find', find)
 // console.log('--top', top)
 // console.log('--portfolio', portfolio)
-// console.log('--header', columns)
+// console.log('--specific', columns)
 
 // show loading animation
 const spinner = ora('Loading data').start()

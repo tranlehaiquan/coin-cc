@@ -72,7 +72,7 @@ $ coinmon -t 1000 // find top 1000
 
 ### Add your portfolio
 
-You can use the `-P` (or `--portfolio`) to retrieve price info and value estimation for your personal crypto portfolio specified in $HOME/.coinmon/portfolio.json in the following format:
+You can use the `-p` (or `--portfolio`) to retrieve price info and value estimation for your personal crypto portfolio specified in $HOME/.coinmon/portfolio.json in the following format:
 
 ```
 $ cd
@@ -85,20 +85,19 @@ And you can use vim or editors to input your portfolio
 
 ```
 {
-  "xrp": 999,
-  "ada": 999,
-  "pivx": 999,
+  "btc": 10,
+  "eth": 100,
   ...
 }
 ```
 
 ```
-$ coinmon -P
+$ coinmon -p
 ```
 
 ### Show specific columns
 
-You can use the `-C` (or `--column`) to display specific columns. You can add index seperated by comma.
+You can use the `-s` (or `--specific`) to display specific columns. You can add index seperated by comma.
 
 ```
 0 - Rank (by Market Cap)
@@ -112,8 +111,8 @@ You can use the `-C` (or `--column`) to display specific columns. You can add in
 ```
 
 ```
-$ coinmon -C 2 // Display only Rank, Coin and Price
-$ coinmon -C 2,4 // Display only Rank, Coin, Price and Change 24H
+$ coinmon -s 0,1,2 // Display only Rank, Coin and Price
+$ coinmon -s 0,1,2,4 // Display only Rank, Coin, Price and Change 24H
 ```
 
 ### Show option menu
