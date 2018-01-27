@@ -11,7 +11,7 @@ const list = val => val.split(',')
 const portfolioPath = `${process.env['HOME']}/.coinmon/portfolio.json`
 
 program
-  .version('0.0.13')
+  .version('0.0.14')
   .option('-c, --convert [currency]', 'Convert to your currency', 'usd')
   .option('-f, --find [symbol]', 'Find specific coin data with coin symbol (can be a comma seperated list)', list, [])
   .option('-t, --top [index]', 'Show the top coins ranked from 1 - [index] according to the market cap', null)
