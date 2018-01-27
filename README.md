@@ -54,7 +54,7 @@ $ coinmon -c btc // convert prices to bitcoin
 
 ### Find specific coin(s)
 
-You can use the `-f` (or `--find`) with coin symbol to search cryptocurrencies. You can add symbols seperated by comma. Credit to @maticrivo
+You can use the `-f` (or `--find`) with coin symbol to search cryptocurrencies. You can add symbols seperated by comma.
 
 ```
 $ coinmon -f btc // search coins included keyword btc
@@ -101,25 +101,19 @@ $ coinmon -P
 You can use the `-C` (or `--column`) to display specific columns. You can add index seperated by comma.
 
 ```
-// Index starts from 2
+0 - Rank (by Market Cap)
+1 - Name
 2 - Price
 3 - Change 1H
 4 - Change 24H
 5 - Change 7D
 6 - Market Cap
+7 - Estimated Value (when portfolio is enabled)
 ```
 
 ```
 $ coinmon -C 2 // Display only Rank, Coin and Price
 $ coinmon -C 2,4 // Display only Rank, Coin, Price and Change 24H
-```
-
-### Change market cap display format
-
-You can use the `-H` (or `--humanize`) with true / false to display market cap in different format. By default, the option is true and the market cap will be shown in humanized format. Credit to@pgilad
-
-```
-$ coinmon -H false // show market cap in full number like 136343835627
 ```
 
 ### Show option menu
@@ -184,11 +178,11 @@ $ docker run --rm -ti coinmon --help
 
 ## Contributors
 
-Thanks to
-@maticrivo 
-@pgila 
-@vladei
-@jaymoulin
+* @maticrivo 
+* @pgila 
+* @vladei 
+* @jaymoulin
+* @anilkilic
 
 ## License
 
