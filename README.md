@@ -131,8 +131,8 @@ You can use the `-r` (or `--rank`) with the index to sort specific columns.
 ```
 
 ```
-$ coinmon -s 0,1,2 // Display only Rank, Coin and Price
-$ coinmon -s 0,1,2,4 // Display only Rank, Coin, Price and Change 24H
+$ coinmon -t 100 -r 4 // Rank top 100 coins based on Change 24H column
+$ coinmon -p -r 7  // Rank my portfolio based on Estimated Value column
 ```
 
 ### Show option menu
