@@ -13,39 +13,35 @@ const constants = require('./constants.js')
 const list = value => value && value.split(',') || []
 const getColoredChangeValueText = (value) => {
   const text = `${value}%`
-  return value ? (value > 0 ? text.green : text.red) : 'NA'
+  return value && (value > 0 ? text.green : text.red) || 'NA'
 }
 program
-  .version('0.0.15')
+  .version('0.0.16')
   .option('-c, --convert [currency]', 'Convert to your currency', validation.validateConvertCurrency, 'USD')
   .option('-f, --find [symbol]', 'Find specific coin data with coin symbol (can be a comma seperated list)', list, [])
   .option('-t, --top [index]', 'Show the top coins ranked from 1 - [index] according to the market cap', validation.validateNumber, 10)
   .option('-p, --portfolio', 'Retrieve coins specified in $HOME/.coinmon/portfolio.json file', validation.validatePorfolioConfigPath)
   .option('-s, --specific [index]', 'Display specific columns (can be a comma seperated list)', list, [])
+  .option('-r, --rank [index]', 'Sort specific column', validation.validateNumber, 0)
   .parse(process.argv)
 
 console.log('\n')
 
-// handle --convert
+// handle options
 const convert = program.convert.toUpperCase()
 const marketcapConvert = convert === 'BTC' ? 'USD' : convert
-
-// handle --find [symbol]
 const find = program.find
-
-// handle --portfolio
 const portfolio = program.portfolio
-
-// handle --top [index]
 const top = (find.length > 0 || portfolio) ? 1500 : program.top
+const column = program.specific
+const rank = program.rank
 
-// handle --specific [index]
+// handle table
 const defaultHeader = ['Rank', 'Coin', `Price ${convert}`, 'Change 1H', 'Change 24H', 'Change 7D', `Market Cap ${marketcapConvert}`].map(title => title.yellow)
 if (portfolio) {
   defaultHeader.push('Estimated Value'.yellow)
 }
 const defaultColumns = defaultHeader.map((item, index) => index)
-const column = program.specific
 const columns = column.length > 0 
 ? column.map(index => +index)
   .filter((index) => {
@@ -100,44 +96,81 @@ const spinner = ora('Loading data').start()
 
 // call coinmarketcap API
 const sourceUrl = `https://api.coinmarketcap.com/v1/ticker/?limit=${top}&convert=${convert}`
+const priceKey = `price_${convert}`.toLowerCase()
+const marketCapKey = `market_cap_${marketcapConvert}`.toLowerCase()
+const volume24hKey = `24h_volume_${marketcapConvert}`.toLowerCase()
+const keysMap = {
+  0: 'rank',
+  1: 'symbol',
+  2: priceKey,
+  3: 'percent_change_1h',
+  4: 'percent_change_24h',
+  5: 'percent_change_7d',
+  6: marketCapKey
+}
+if (portfolio) {
+  keysMap[defaultHeader.length - 1] = 'portfolio_estimated_value'
+}
 axios.get(sourceUrl)
   .then(function (response) {
     spinner.stop()
     response.data
       .filter(record => {
-          if (portfolio) {
-            return Object.keys(portfolioCoins).some(keyword => record.symbol.toLowerCase() === keyword.toLowerCase())
-          }
-          if (find.length > 0) {
-            return find.some(keyword => record.symbol.toLowerCase() === keyword.toLowerCase())
-          }
+        if (portfolio) {
+          return Object.keys(portfolioCoins).some(keyword => record.symbol.toLowerCase() === keyword.toLowerCase())
+        } else if (find.length > 0) {
+          return find.some(keyword => record.symbol.toLowerCase() === keyword.toLowerCase())
+        }
         return true
       })
       .map(record => {
-        // change 1h
-        const percentChange1h = record.percent_change_1h
-        const change1h = getColoredChangeValueText(record.percent_change_1h)
-        // change 24h
-        const percentChange24h = record.percent_change_24h
-        const change24h = getColoredChangeValueText(record.percent_change_24h)
-        // change 7d
-        const percentChange7d = record.percent_change_7d
-        const change7d = getColoredChangeValueText(record.percent_change_7d)
+        const editedRecord = {
+          'name': record.name,
+          'symbol': record.symbol,
+          'rank': record.rank && +record.rank,
+          'available_supply': record.available_supply && +record.available_supply,
+          'total_supply': record.total_supply && +record.total_supply,
+          'max_supply': record.max_supply && +record.max_supply,
+          'percent_change_1h': record.percent_change_1h && +record.percent_change_1h,
+          'percent_change_24h': record.percent_change_24h && +record.percent_change_24h,
+          'percent_change_7d': record.percent_change_7d && +record.percent_change_7d,
+          'last_updated': record.last_updated
+        }
+        editedRecord[priceKey] = record[priceKey] && +record[priceKey]
+        editedRecord[volume24hKey] = record[volume24hKey] && +record[volume24hKey]
+        editedRecord[marketCapKey] = record[marketCapKey] && +record[marketCapKey]
+        if (portfolio) {
+          const portfolioGross = (portfolioCoins[record.symbol.toLowerCase()] * parseFloat(record[priceKey]))
+          editedRecord['portfolio_estimated_value'] = portfolioGross
+        }
+        return editedRecord
+      })
+      .sort((recordA, recordB) => {
+        const compareKey = keysMap[rank]
+        if (rank === 0 || !compareKey) {
+          return -1
+        } else if (rank === 1) {
+          return recordA[compareKey].localeCompare(recordB[compareKey])
+        } else {
+          return recordB[compareKey] - recordA[compareKey]
+        }
+      })
+      .map(record => {
         // marketcap
-        const marketCap = record[`market_cap_${marketcapConvert}`.toLowerCase()]
-        const displayedMarketCap = marketCap ? humanize.compactInteger(marketCap, 3) : marketCap
+        const marketCap = record[marketCapKey]
+        const displayedMarketCap = marketCap && humanize.compactInteger(marketCap, 3) || 'NA'
         // final value
         const defaultValues = [
           record.rank,
           record.symbol,
-          record[`price_${convert}`.toLowerCase()],
-          change1h,
-          change24h,
-          change7d,
+          record[priceKey],
+          getColoredChangeValueText(record.percent_change_1h),
+          getColoredChangeValueText(record.percent_change_24h),
+          getColoredChangeValueText(record.percent_change_7d),
           displayedMarketCap,
         ]
         if (portfolio) {
-          const portfolioGross = (portfolioCoins[record.symbol.toLowerCase()] * parseFloat(record[`price_${convert}`.toLowerCase()])).toFixed(2)
+          const portfolioGross = record.portfolio_estimated_value.toFixed(2)
           portfolioSum = portfolioSum + parseFloat(portfolioGross)
           defaultValues.push(portfolioGross)
         }

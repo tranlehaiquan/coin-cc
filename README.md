@@ -115,6 +115,26 @@ $ coinmon -s 0,1,2 // Display only Rank, Coin and Price
 $ coinmon -s 0,1,2,4 // Display only Rank, Coin, Price and Change 24H
 ```
 
+### Rank specific columns
+
+You can use the `-r` (or `--rank`) with the index to sort specific columns.
+
+```
+0 - Rank (by Market Cap)
+1 - Name
+2 - Price
+3 - Change 1H
+4 - Change 24H
+5 - Change 7D
+6 - Market Cap
+7 - Estimated Value (when portfolio is enabled)
+```
+
+```
+$ coinmon -s 0,1,2 // Display only Rank, Coin and Price
+$ coinmon -s 0,1,2,4 // Display only Rank, Coin, Price and Change 24H
+```
+
 ### Show option menu
 
 You can use the `-h` (or `--help`) to find all valid options of coinmon
