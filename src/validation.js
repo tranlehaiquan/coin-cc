@@ -9,13 +9,13 @@ module.exports = {
     }
     return +value
   },
-  validatePorfolioConfigPath : () => {
-    const path = constants.portfolioPath
+  validatePorfolioConfigPath : (customPath) => {
+    const path = customPath || constants.portfolioPath
     if (!fs.existsSync(path)) {
       console.log(`Please include a configuration file at ${path}.`.red)
       process.exit()
     }
-    return true
+    return path
   },
   validateConvertCurrency : (value) => {
     const convert = value.toUpperCase()
