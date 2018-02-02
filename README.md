@@ -92,7 +92,8 @@ And you can use vim or editors to input your portfolio
 ```
 
 ```
-$ coinmon -p
+$ coinmon -p // Retrieve the portfolio from $HOME/.coinmon/portfolio.json
+$ coinmon -p /anotherDir/myportfolio.json // Retrieve the portfolio from specified directory
 ```
 
 ### Show specific columns
