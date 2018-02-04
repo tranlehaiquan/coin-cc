@@ -20,7 +20,7 @@ program
   .option('-c, --convert [currency]', 'Convert to your currency', validation.validateConvertCurrency, 'USD')
   .option('-f, --find [symbol]', 'Find specific coin data with coin symbol (can be a comma seperated list)', list, [])
   .option('-t, --top [index]', 'Show the top coins ranked from 1 - [index] according to the market cap', validation.validateNumber, 10)
-  .option('-p, --portfolio [portfolioPath]', 'Retrieve coins specified in $HOME/.coinmon/portfolio.json file', validation.validatePorfolioConfigPath)
+  .option('-p, --portfolio [portfolioPath]', 'Retrieve coins specified in $HOME/.coinmon/portfolio.json file', validation.validatePorfolioConfigPath, constants.portfolioPath)
   .option('-s, --specific [index]', 'Display specific columns (can be a comma seperated list)', list, [])
   .option('-r, --rank [index]', 'Sort specific column', validation.validateNumber, 0)
   .parse(process.argv)
@@ -77,7 +77,7 @@ let portofolioCoins = []
 let portfolioSum = 0
 if (portfolio) {
   try {
-    portfolioCoins = JSON.parse(fs.readFileSync(constants.portfolioPath).toString())
+    portfolioCoins = JSON.parse(fs.readFileSync(portfolio).toString())
   } catch (error) {
     console.log(`Please include a valid json file.`.red)
     process.exit()
