@@ -16,11 +16,11 @@ const getColoredChangeValueText = (value) => {
   return value && (value > 0 ? text.green : text.red) || 'NA'
 }
 program
-  .version('0.0.18')
+  .version('0.0.19')
   .option('-c, --convert [currency]', 'Convert to your currency', validation.validateConvertCurrency, 'USD')
   .option('-f, --find [symbol]', 'Find specific coin data with coin symbol (can be a comma seperated list)', list, [])
   .option('-t, --top [index]', 'Show the top coins ranked from 1 - [index] according to the market cap', validation.validateNumber, 10)
-  .option('-p, --portfolio [portfolioPath]', 'Retrieve coins specified in $HOME/.coinmon/portfolio.json file', validation.validatePorfolioConfigPath, constants.portfolioPath)
+  .option('-p, --portfolio [portfolioPath]', 'Retrieve coins specified in $HOME/.coinmon/portfolio.json file')
   .option('-s, --specific [index]', 'Display specific columns (can be a comma seperated list)', list, [])
   .option('-r, --rank [index]', 'Sort specific column', validation.validateNumber, 0)
   .parse(process.argv)
@@ -77,7 +77,8 @@ let portofolioCoins = []
 let portfolioSum = 0
 if (portfolio) {
   try {
-    portfolioCoins = JSON.parse(fs.readFileSync(portfolio).toString())
+    const portfolioPath = (typeof portfolio) === 'string' ? portfolio : constants.portfolioPath
+    portfolioCoins = JSON.parse(fs.readFileSync(portfolioPath).toString())
   } catch (error) {
     console.log(`Please include a valid json file.`.red)
     process.exit()
