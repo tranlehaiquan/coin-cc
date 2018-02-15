@@ -39,6 +39,7 @@ const rank = program.rank
 // handle table
 const defaultHeader = ['Rank', 'Coin', `Price ${convert}`, 'Change 1H', 'Change 24H', 'Change 7D', `Market Cap ${marketcapConvert}`].map(title => title.yellow)
 if (portfolio) {
+  defaultHeader.push('Balance'.yellow)
   defaultHeader.push('Estimated Value'.yellow)
 }
 const defaultColumns = defaultHeader.map((item, index) => index)
@@ -110,8 +111,10 @@ const keysMap = {
   6: marketCapKey
 }
 if (portfolio) {
-  keysMap[defaultHeader.length - 1] = 'portfolio_estimated_value'
+  keysMap[defaultHeader.length - 1] = 'portfolio_balance'
+  keysMap[defaultHeader.length] = 'portfolio_estimated_value'
 }
+console.log(keysMap)
 axios.get(sourceUrl)
   .then(function (response) {
     spinner.stop()
@@ -141,7 +144,8 @@ axios.get(sourceUrl)
         editedRecord[volume24hKey] = record[volume24hKey] && +record[volume24hKey]
         editedRecord[marketCapKey] = record[marketCapKey] && +record[marketCapKey]
         if (portfolio) {
-          const portfolioGross = (portfolioCoins[record.symbol.toLowerCase()] * parseFloat(record[priceKey]))
+          const portfolioGross = portfolioCoins[record.symbol.toLowerCase()] * parseFloat(record[priceKey])
+          editedRecord['portfolio_balance'] = portfolioCoins[record.symbol.toLowerCase()]
           editedRecord['portfolio_estimated_value'] = portfolioGross
         }
         return editedRecord
@@ -173,6 +177,7 @@ axios.get(sourceUrl)
         if (portfolio) {
           const portfolioGross = record.portfolio_estimated_value.toFixed(2)
           portfolioSum = portfolioSum + parseFloat(portfolioGross)
+          defaultValues.push(record.portfolio_balance)
           defaultValues.push(portfolioGross)
         }
         const values = sortedColumns.map(index => defaultValues[index])
