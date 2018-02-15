@@ -108,7 +108,8 @@ You can use the `-s` (or `--specific`) to display specific columns. You can add 
 4 - Change 24H
 5 - Change 7D
 6 - Market Cap
-7 - Estimated Value (when portfolio is enabled)
+7 - Balance (when portfolio is enabled)
+8 - Estimated Value (when portfolio is enabled)
 ```
 
 ```
@@ -128,7 +129,8 @@ You can use the `-r` (or `--rank`) with the index to sort specific columns.
 4 - Change 24H
 5 - Change 7D
 6 - Market Cap
-7 - Estimated Value (when portfolio is enabled)
+7 - Balance (when portfolio is enabled)
+8 - Estimated Value (when portfolio is enabled)
 ```
 
 ```
