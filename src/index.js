@@ -16,7 +16,7 @@ const getColoredChangeValueText = (value) => {
   return value && (value > 0 ? text.green : text.red) || 'NA'
 }
 program
-  .version('0.0.20')
+  .version('0.0.21')
   .option('-c, --convert [currency]', 'Convert to your currency', validation.validateConvertCurrency, 'USD')
   .option('-f, --find [symbol]', 'Find specific coin data with coin symbol (can be a comma seperated list)', list, [])
   .option('-t, --top [index]', 'Show the top coins ranked from 1 - [index] according to the market cap', validation.validateNumber, 10)
@@ -114,7 +114,6 @@ if (portfolio) {
   keysMap[defaultHeader.length - 1] = 'portfolio_balance'
   keysMap[defaultHeader.length] = 'portfolio_estimated_value'
 }
-console.log(keysMap)
 axios.get(sourceUrl)
   .then(function (response) {
     spinner.stop()
