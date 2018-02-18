@@ -1,6 +1,6 @@
 {
   "name": "coinmon",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "A cryptocurrency price monitoring tool",
   "main": "index.js",
   "scripts": {
