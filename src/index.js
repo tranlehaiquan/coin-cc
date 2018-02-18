@@ -74,7 +74,7 @@ const table = new Table({
 })
 
 // read portfolio config
-let portofolioCoins = []
+let portfolioCoins = []
 let portfolioSum = 0
 if (portfolio) {
   try {
