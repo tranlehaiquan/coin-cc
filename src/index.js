@@ -15,8 +15,9 @@ const getColoredChangeValueText = (value) => {
   const text = `${value}%`
   return value && (value > 0 ? text.green : text.red) || 'NA'
 }
+const { version } = require('../package.json')
 program
-  .version('0.0.22')
+  .version(version)
   .option('-c, --convert [currency]', 'Convert to your currency', validation.validateConvertCurrency, 'USD')
   .option('-f, --find [symbol]', 'Find specific coin data with coin symbol (can be a comma seperated list)', list, [])
   .option('-t, --top [index]', 'Show the top coins ranked from 1 - [index] according to the market cap', validation.validateNumber, 10)
