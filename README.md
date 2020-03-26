@@ -10,14 +10,10 @@
 Check cryptocurrencies' prices, changes on your console.
 Best CLI tool for those who are both **Crypto investors** and **Engineers**.
 
-All data comes from [coinmarketcap.com](https://coinmarketcap.com/) APIs.
+All data comes from [coincap](https://coincap.io/) APIs.
 
-## Upcoming 1.0.0
-We are working hard to add more useful features on coinmon!
-* redesign
-* auto-refresh
-* currency detail
-* price chart
+## Quick Update
+* As coinmarketcap API is only free with API keys, we moved to use coincap API and disabled some features.
 
 ## Install
 
@@ -36,22 +32,6 @@ $ coinmon
 
 ## Options
 
-### Convert to specific currency base
-
-You can use the `-c` (or `--convert`) with the currency symbol to find in terms of another currency.
-The default currency is USD and it supports AUD, BRL, CAD, CHF, CLP, CNY, CZK, DKK, EUR, GBP, HKD, HUF, IDR, ILS, INR, JPY, KRW, MXN, MYR, NOK, NZD, PHP, PKR, PLN, RUB, SEK, SGD, THB, TRY, TWD, ZAR.
-
-```
-$ coinmon -c eur // convert prices to Euro
-$ coinmon -c jpy // convert prices to Yen
-```
-
-You can also use BTC as the price pair.
-
-```
-$ coinmon -c btc // convert prices to bitcoin
-```
-
 ### Find specific coin(s)
 
 You can use the `-f` (or `--find`) with coin symbol to search cryptocurrencies. You can add symbols seperated by comma.
@@ -67,75 +47,6 @@ You can use the `-t` (or `--top`) with the index to find the top n cryptocurrenc
 
 ```
 $ coinmon -t 50 // find top 50
-$ coinmon -t 1000 // find top 1000
-```
-
-### Add your portfolio
-
-You can use the `-p` (or `--portfolio`) to retrieve price info and value estimation for your personal crypto portfolio specified in $HOME/.coinmon/portfolio.json in the following format:
-
-```
-$ cd
-$ mkdir .coinmon
-$ cd .coinmon
-$ touch portfolio.json
-```
-
-And you can use vim or editors to input your portfolio
-
-```
-{
-  "btc": 10,
-  "eth": 100,
-  ...
-}
-```
-
-```
-$ coinmon -p // Retrieve the portfolio from $HOME/.coinmon/portfolio.json
-$ coinmon -p /anotherDir/myportfolio.json // Retrieve the portfolio from specified directory
-```
-
-### Show specific columns
-
-You can use the `-s` (or `--specific`) to display specific columns. You can add index seperated by comma.
-
-```
-0 - Rank (by Market Cap)
-1 - Name
-2 - Price
-3 - Change 1H
-4 - Change 24H
-5 - Change 7D
-6 - Market Cap
-7 - Balance (when portfolio is enabled)
-8 - Estimated Value (when portfolio is enabled)
-```
-
-```
-$ coinmon -s 0,1,2 // Display only Rank, Coin and Price
-$ coinmon -s 0,1,2,4 // Display only Rank, Coin, Price and Change 24H
-```
-
-### Rank specific columns
-
-You can use the `-r` (or `--rank`) with the index to sort specific columns.
-
-```
-0 - Rank (by Market Cap)
-1 - Name
-2 - Price
-3 - Change 1H
-4 - Change 24H
-5 - Change 7D
-6 - Market Cap
-7 - Balance (when portfolio is enabled)
-8 - Estimated Value (when portfolio is enabled)
-```
-
-```
-$ coinmon -t 100 -r 4 // Rank top 100 coins based on Change 24H column
-$ coinmon -p -r 7  // Rank my portfolio based on Estimated Value column
 ```
 
 ### Show option menu

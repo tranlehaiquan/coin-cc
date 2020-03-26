@@ -9,21 +9,21 @@ module.exports = {
     }
     return +value
   },
-  validatePorfolioConfigPath : (customPath) => {
-    const path = customPath || constants.portfolioPath
-    if (!fs.existsSync(path)) {
-      console.log(`Please include a configuration file at ${path}.`.red)
-      process.exit()
-    }
-    return path
-  },
-  validateConvertCurrency : (value) => {
-    const convert = value.toUpperCase()
-    const availableCurrencies = ['USD', 'AUD', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'IDR', 'ILS', 'INR', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PKR', 'PLN', 'RUB', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'ZAR', 'BTC']
-    if (availableCurrencies.indexOf(convert) === -1) {
-      console.log('We cannot convert to your currency.'.red)
-      process.exit()
-    }
-    return convert
-  }
+  // validatePorfolioConfigPath : (customPath) => {
+  //   const path = customPath || constants.portfolioPath
+  //   if (!fs.existsSync(path)) {
+  //     console.log(`Please include a configuration file at ${path}.`.red)
+  //     process.exit()
+  //   }
+  //   return path
+  // },
+  // validateConvertCurrency : (value) => {
+  //   const convert = value.toUpperCase()
+  //   const availableCurrencies = ['USD', 'AUD', 'BRL', 'CAD', 'CHF', 'CLP', 'CNY', 'CZK', 'DKK', 'EUR', 'GBP', 'HKD', 'HUF', 'IDR', 'ILS', 'INR', 'JPY', 'KRW', 'MXN', 'MYR', 'NOK', 'NZD', 'PHP', 'PKR', 'PLN', 'RUB', 'SEK', 'SGD', 'THB', 'TRY', 'TWD', 'ZAR', 'BTC']
+  //   if (availableCurrencies.indexOf(convert) === -1) {
+  //     console.log('We cannot convert to your currency.'.red)
+  //     process.exit()
+  //   }
+  //   return convert
+  // }
 }
