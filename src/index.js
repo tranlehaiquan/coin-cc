@@ -141,13 +141,13 @@ axios.get(sourceUrl)
         const editedRecord = {
           name: record.name,
           symbol: record.symbol,
-          rank: record.rank && +record.rank,
-          price: record.priceUsd && +record.priceUsd,
-          market_cap: record.marketCapUsd && +record.marketCap,
-          supply: record.supply && +record.supply,
-          market_cap: record.marketCapUsd && +record.marketCapUsd,
-          percent_change_24h: record.changePercent24Hr && +record.changePercent24Hr,
-          volume: record.volumeUsd24Hr && +record.volumeUsd24Hr,
+          rank: record.rank ? +record.rank : 0,
+          price: record.priceUsd ? +record.priceUsd : 0,
+          market_cap: record.marketCapUsd ? +record.marketCap : 0,
+          supply: record.supply ? +record.supply : 0,
+          market_cap: record.marketCapUsd ? +record.marketCapUsd : 0,
+          percent_change_24h: record.changePercent24Hr ? +record.changePercent24Hr : 0,
+          volume: record.volumeUsd24Hr ? +record.volumeUsd24Hr : 0,
         }
         return editedRecord
       })
