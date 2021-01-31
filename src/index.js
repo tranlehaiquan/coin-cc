@@ -40,25 +40,14 @@ const getValidTop = (top) => {
 const { version } = require('../package.json')
 program
   .version(version)
-  // .option('-c, --convert [currency]', 'Convert to your currency', validation.validateConvertCurrency, 'USD')
   .option('-f, --find [symbol]', 'Find specific coin data with coin symbol (can be a comma seperated list)', list, [])
   .option('-t, --top [index]', 'Show the top coins ranked from 1 - [index] according to the market cap', validation.validateNumber, DEFAULT_TOP)
-  // .option('-p, --portfolio [portfolioPath]', 'Retrieve coins specified in $HOME/.coinmon/portfolio.json file')
-  // .option('-s, --specific [index]', 'Display specific columns (can be a comma seperated list)', list, [])
-  // .option('-r, --rank [index]', 'Sort specific column', validation.validateNumber, 0)
   .parse(process.argv)
 
 console.log('\n')
 
-// handle options
-// const convert = program.convert.toUpperCase()
-// const marketcapConvert = convert === 'BTC' ? 'USD' : convert
 const find = program.find
-const portfolio = program.portfolio
-// const top = (find.length > 0 || portfolio) ? 1500 : program.top
-const top = (portfolio || find.length > 0) ? MAX_TOP : getValidTop(program.top)
-// const column = program.specific
-// const rank = program.rank
+const top = find.length > 0 ? MAX_TOP : getValidTop(program.top)
 
 // handle table
 const defaultHeader = [
@@ -66,23 +55,12 @@ const defaultHeader = [
   'Coin',
   'Price (USD)',
   'Change 24H',
-  'VWAP 24H',
+  // 'VWAP 24H',
   'Market Cap',
   'Supply',
   'Volume 24H',
 ].map(title => title.yellow)
-// if (portfolio) {
-//   defaultHeader.push('Balance'.yellow)
-//   defaultHeader.push('Estimated Value'.yellow)
-// }
 const defaultColumns = defaultHeader.map((item, index) => index)
-// const columns = column.length > 0
-//   ? column.map(index => +index)
-//     .filter((index) => {
-//       return !isNaN(index)
-//         && index < defaultHeader.length
-//     })
-//   : defaultColumns
 const columns = defaultColumns
 const sortedColumns = columns.sort()
 const header = sortedColumns.map(index => defaultHeader[index])
@@ -154,9 +132,6 @@ axios.get(sourceUrl)
     spinner.stop()
     response.data.data
       .filter(record => {
-        // if (portfolio) {
-        //   return Object.keys(portfolioCoins).some(keyword => record.symbol.toLowerCase() === keyword.toLowerCase())
-        // } else
         if (find.length > 0) {
           return find.some(keyword => record.symbol.toLowerCase() === keyword.toLowerCase())
         }
@@ -169,33 +144,13 @@ axios.get(sourceUrl)
           rank: record.rank && +record.rank,
           price: record.priceUsd && +record.priceUsd,
           market_cap: record.marketCapUsd && +record.marketCap,
-          vwap: record.vwap24Hr && +record.vwap24Hr,
           supply: record.supply && +record.supply,
           market_cap: record.marketCapUsd && +record.marketCapUsd,
           percent_change_24h: record.changePercent24Hr && +record.changePercent24Hr,
           volume: record.volumeUsd24Hr && +record.volumeUsd24Hr,
-          // 'last_updated': record.last_updated
         }
-        // editedRecord[priceKey] = record[priceKey] && +record[priceKey]
-        // editedRecord[volume24hKey] = record[volume24hKey] && +record[volume24hKey]
-        // editedRecord[marketCapKey] = record[marketCapKey] && +record[marketCapKey]
-        // if (portfolio) {
-        //   const portfolioGross = portfolioCoins[record.symbol.toLowerCase()] * parseFloat(record[priceKey])
-        //   editedRecord['portfolio_balance'] = portfolioCoins[record.symbol.toLowerCase()]
-        //   editedRecord['portfolio_estimated_value'] = portfolioGross
-        // }
         return editedRecord
       })
-      // .sort((recordA, recordB) => {
-      //   const compareKey = keysMap[rank]
-      //   if (rank === 0 || !compareKey) {
-      //     return -1
-      //   } else if (rank === 1) {
-      //     return recordA[compareKey].localeCompare(recordB[compareKey])
-      //   } else {
-      //     return recordB[compareKey] - recordA[compareKey]
-      //   }
-      // })
       .map(record => {
         // marketcap
         // const marketCap = record[marketCapKey]
@@ -206,17 +161,10 @@ axios.get(sourceUrl)
           record.symbol,
           record.price.toFixed(4),
           getColoredChangeValueText(record.percent_change_24h.toFixed(2)),
-          record.vwap.toFixed(2),
           formatNumber(record.market_cap),
           formatNumber(record.supply),
           formatNumber(record.volume),
         ]
-        // if (portfolio) {
-        //   const portfolioGross = record.portfolio_estimated_value.toFixed(2)
-        //   portfolioSum = portfolioSum + parseFloat(portfolioGross)
-        //   defaultValues.push(record.portfolio_balance)
-        //   defaultValues.push(portfolioGross)
-        // }
         const values = sortedColumns
           .map(index => defaultValues[index])
         return values
@@ -227,11 +175,10 @@ axios.get(sourceUrl)
     } else {
       console.log(`Data source from coincap.io at ${new Date().toLocaleTimeString()}`)
       console.log(table.toString())
-      // portfolio && console.log('Estimated portfolio: '.bold + `${portfolioSum.toFixed(2)}`.green + ` ${convert}\n`)
     }
   })
   .catch(function (error) {
-    // console.log('error', error)
+    console.log('error', error)
     spinner.stop()
     console.error('Coinmon is not working now. Please try again later.'.red)
   })
